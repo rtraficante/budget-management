@@ -1,4 +1,4 @@
-import { type Category, type Transaction } from "@prisma/client";
+import { Prisma, type Category, type Transaction } from "@prisma/client";
 import { Table } from "flowbite-react";
 
 interface Props {
@@ -27,7 +27,7 @@ const TransactionTable = ({ data }: Props) => {
               {t.date.toLocaleDateString()}
             </Table.Cell>
             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-              {t.amount}
+              {new Prisma.Decimal(t.amount).toNumber().toFixed(2)}
             </Table.Cell>
             <Table.Cell>
               {t.description ? t.description : "Empty description"}

@@ -1,6 +1,7 @@
 import { Button, Label, TextInput } from "flowbite-react";
 import React, { type ChangeEvent, useState } from "react";
 import CurrencyInput from "react-currency-input-field";
+import { api } from "~/utils/api";
 
 const TransactionForm = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +9,20 @@ const TransactionForm = () => {
     amount: 0,
     category: "",
     description: "",
+  });
+
+  const ctx = api.useContext();
+
+  const { mutate } = api.transaction.add.useMutation({
+    onSuccess: () => {
+      setFormData({
+        date: new Date().toISOString().substring(0, 10),
+        amount: 0,
+        category: "",
+        description: "",
+      });
+      void ctx.transaction.getAll.invalidate();
+    },
   });
 
   const handleFormChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -29,7 +44,17 @@ const TransactionForm = () => {
   console.log(formData);
 
   return (
-    <form className="mt-4 flex flex-col gap-4">
+    <form
+      className="mt-4 flex flex-col gap-4"
+      onSubmit={(e) => {
+        e.preventDefault();
+        mutate({
+          ...formData,
+          amount: Number(formData.amount),
+          date: new Date(formData.date),
+        });
+      }}
+    >
       <div className="flex flex-col md:flex-row md:justify-between">
         <div>
           <div className="mb-2 block">
@@ -52,7 +77,8 @@ const TransactionForm = () => {
             id="amount"
             name="amount"
             placeholder="Please enter an amount"
-            defaultValue={0.0}
+            value={formData.amount}
+            fixedDecimalLength={2}
             decimalsLimit={2}
             onValueChange={(value, name) =>
               setFormData({ ...formData, [name as string]: value })
@@ -87,6 +113,7 @@ const TransactionForm = () => {
         <TextInput
           id="description"
           name="description"
+          value={formData.description}
           onChange={handleFormChange}
           type="text"
           required={false}
