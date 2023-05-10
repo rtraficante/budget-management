@@ -11,6 +11,7 @@ import {
 
 const Nav = () => {
   const user = useUser();
+
   return (
     <div className="w-fit">
       <Sidebar aria-label="Default sidebar example">

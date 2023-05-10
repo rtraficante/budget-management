@@ -14,10 +14,12 @@ model Transaction {
     id          Int       @id @default(autoincrement())
     amount      Float
     description String?
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
+    date        DateTime
     category    Category? @relation(fields: [categoryId], references: [id])
     categoryId  Int?
+    userId      String
+
+    @@index([userId])
 }
 
 model Category {

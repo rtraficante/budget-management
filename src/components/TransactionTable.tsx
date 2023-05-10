@@ -24,7 +24,7 @@ const TransactionTable = ({ data }: Props) => {
             className="bg-white dark:border-gray-700 dark:bg-gray-800"
           >
             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-              {t.createdAt.toLocaleDateString()}
+              {t.date.toLocaleDateString()}
             </Table.Cell>
             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
               {t.amount}
