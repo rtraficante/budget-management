@@ -27,3 +27,18 @@ model Category {
     name         String
     transactions Transaction[]
 }
+
+model CreditCard {
+    id       Int              @id @default(autoincrement())
+    provider String
+    nickname String
+    dueDate  DateTime
+    status   CreditCardStatus @default(UNPAID)
+    userId   String
+}
+
+enum CreditCardStatus {
+    PAID
+    UNPAID
+    LATE
+}

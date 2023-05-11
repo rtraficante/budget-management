@@ -41,7 +41,6 @@ const TransactionForm = () => {
     setFormData({ ...formData, [e.currentTarget.name]: e.currentTarget.value });
   };
 
-  console.log(formData);
 
   return (
     <form

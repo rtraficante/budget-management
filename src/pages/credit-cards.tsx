@@ -1,7 +1,11 @@
 import { Button } from "flowbite-react";
-import React from "react";
+import { type NextPage } from "next";
+import CreditCardTable from "~/components/CreditCardTable";
 
-const creditcards = () => {
+import { api } from "~/utils/api";
+
+const CreditCards: NextPage = () => {
+  const { data } = api.creditCard.getAll.useQuery();
   return (
     <main className="m-8 mx-auto mt-20 flex w-full max-w-[1000px] flex-col gap-4">
       <div className="flex flex-col">
@@ -14,8 +18,9 @@ const creditcards = () => {
         </Button>
         {/* {toggleForm ? <TransactionForm /> : null} */}
       </div>
+      {data !== undefined ? <CreditCardTable data={data} /> : null}
     </main>
   );
 };
 
-export default creditcards;
+export default CreditCards;
