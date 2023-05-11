@@ -10,7 +10,7 @@ const Transactions: NextPage = () => {
   const [toggleForm, setToggleForm] = useState(false);
 
   return (
-    <main className="m-8 mx-auto flex w-full max-w-[1000px] flex-col gap-4">
+    <main className="m-8 mx-auto mt-20 flex w-full max-w-[1000px] flex-col gap-4">
       <div className="flex flex-col">
         <Button
           onClick={() => setToggleForm(!toggleForm)}

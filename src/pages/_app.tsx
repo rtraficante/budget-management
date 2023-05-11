@@ -7,6 +7,7 @@ import "~/styles/globals.css";
 import Nav from "~/components/Nav";
 import Header from "~/components/Header";
 import { useState } from "react";
+import Layout from "~/components/Layout";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -16,7 +17,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       <div className="flex">
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <Nav sidebarOpen={sidebarOpen} />
-        <Component {...pageProps} className="flex-1" />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </div>
     </ClerkProvider>
   );
