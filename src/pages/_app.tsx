@@ -5,12 +5,17 @@ import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
 import Nav from "~/components/Nav";
+import Header from "~/components/Header";
+import { useState } from "react";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
     <ClerkProvider {...pageProps}>
       <div className="flex">
-        <Nav />
+        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        <Nav sidebarOpen={sidebarOpen} />
         <Component {...pageProps} className="flex-1" />
       </div>
     </ClerkProvider>

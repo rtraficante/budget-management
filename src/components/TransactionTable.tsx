@@ -7,7 +7,7 @@ interface Props {
 
 const TransactionTable = ({ data }: Props) => {
   return (
-    <Table hoverable={true}>
+    <Table hoverable={true} className="table-fixed">
       <Table.Head>
         <Table.HeadCell>Date</Table.HeadCell>
         <Table.HeadCell>Amount</Table.HeadCell>
@@ -21,7 +21,7 @@ const TransactionTable = ({ data }: Props) => {
         {data.map((t) => (
           <Table.Row
             key={t.id}
-            className="bg-white dark:border-gray-700 dark:bg-gray-800"
+            className=" bg-white dark:border-gray-700 dark:bg-gray-800"
           >
             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
               {t.date.toLocaleDateString()}
@@ -29,7 +29,7 @@ const TransactionTable = ({ data }: Props) => {
             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
               {new Prisma.Decimal(t.amount).toNumber().toFixed(2)}
             </Table.Cell>
-            <Table.Cell>
+            <Table.Cell className="break-words">
               {t.description ? t.description : "Empty description"}
             </Table.Cell>
             <Table.Cell>
