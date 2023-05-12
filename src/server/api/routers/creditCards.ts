@@ -21,14 +21,14 @@ export const creditCardRouter = createTRPCRouter({
       },
     });
 
-    for (const card of creditCards) {
+    for (const [idx, card] of creditCards.entries()) {
       const dueDate = card.dueDate.toLocaleDateString();
       const today = new Date().toLocaleDateString();
 
       if (isPassedDue(dueDate, today)) {
         switch (card.status) {
           case "UNPAID":
-            await ctx.prisma.creditCard.update({
+            const lateUpdatedCard = await ctx.prisma.creditCard.update({
               where: {
                 id: card.id,
               },
@@ -36,8 +36,11 @@ export const creditCardRouter = createTRPCRouter({
                 status: "LATE",
               },
             });
+            creditCards[idx] = lateUpdatedCard;
+            break;
+
           case "PAID":
-            await ctx.prisma.creditCard.update({
+            const unpaidUpdatedCard = await ctx.prisma.creditCard.update({
               where: {
                 id: card.id,
               },
@@ -45,6 +48,8 @@ export const creditCardRouter = createTRPCRouter({
                 status: "UNPAID",
               },
             });
+            creditCards[idx] = unpaidUpdatedCard;
+            break;
         }
       }
     }
@@ -70,12 +75,22 @@ export const creditCardRouter = createTRPCRouter({
         return;
       }
 
+      const today = new Date();
+      const previousDue = new Date(creditCard.dueDate);
+
+      let month = today.getMonth() + 2;
+      if (month > 12) month = 1;
+
+      const day = previousDue.getDate();
+      const year = today.getFullYear();
+
       await ctx.prisma.creditCard.update({
         where: {
           id: input.id,
         },
         data: {
-          status: "PAID",
+          status: creditCard.status === "LATE" ? "UNPAID" : "PAID",
+          dueDate: new Date(`${month}/${day}/${year}`),
         },
       });
 
@@ -89,5 +104,27 @@ export const creditCardRouter = createTRPCRouter({
         },
       });
       return transaction;
+    }),
+  add: privateProcedure
+    .input(
+      z.object({
+        provider: z.string(),
+        nickname: z.string(),
+        dueDate: z.number().min(1).max(31),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const month = new Date().getMonth() + 1;
+      const day = input.dueDate;
+      const year = new Date().getFullYear();
+
+      return ctx.prisma.creditCard.create({
+        data: {
+          provider: input.provider,
+          nickname: input.nickname,
+          dueDate: new Date(`${month}/${day}/${year}`),
+          userId: ctx.currentUserId,
+        },
+      });
     }),
 });
