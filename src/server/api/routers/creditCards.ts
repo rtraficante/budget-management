@@ -93,7 +93,7 @@ export const creditCardRouter = createTRPCRouter({
           date: new Date(),
           amount: input.amount,
           description: `${creditCard.provider} - ${creditCard.nickname}`,
-          categoryId: 2,
+          categoryId: 1,
         },
       });
       return transaction;

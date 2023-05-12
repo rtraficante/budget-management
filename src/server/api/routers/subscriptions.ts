@@ -10,16 +10,17 @@ export const subscriptionRouter = createTRPCRouter({
       },
     });
     for (const [idx, sub] of subs.entries()) {
+      // TODO: Add functionality for weekly and yearly subscriptions
       const today = new Date().toLocaleDateString();
       const chargeDate = sub.chargeDate.toLocaleDateString();
 
       if (isPassedDue(chargeDate, today)) {
         await ctx.prisma.transaction.create({
           data: {
-            date: today,
+            date: new Date(today),
             amount: sub.recurringCharge,
             description: `${sub.company} - Subscription`,
-            categoryId: 4,
+            categoryId: 2,
             userId: ctx.currentUserId,
           },
         });
