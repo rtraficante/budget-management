@@ -28,7 +28,7 @@ const AddCreditCardForm = () => {
 
   return (
     <form
-      className="mt-4 flex flex-col gap-4"
+      className=" flex flex-col gap-4"
       onSubmit={(e) => {
         e.preventDefault();
         mutate({ ...formData, dueDate: Number(formData.dueDate) });

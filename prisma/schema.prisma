@@ -37,6 +37,21 @@ model CreditCard {
     userId   String
 }
 
+model Subscription {
+    id              Int              @id @default(autoincrement())
+    company         String
+    recurringCharge Decimal          @db.Money
+    chargeDate      DateTime
+    plan            SubscriptionPlan
+    userId          String
+}
+
+enum SubscriptionPlan {
+    MONTHLY
+    WEEKLY
+    YEARLY
+}
+
 enum CreditCardStatus {
     PAID
     UNPAID

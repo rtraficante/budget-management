@@ -45,7 +45,12 @@ const CreditCardTable = ({ data }: Props) => {
               {cc.status}
             </Table.Cell>
             <Table.Cell>
-              <PayDropdown amount={amount} setAmount={setAmount} id={cc.id} disabled={cc.status === 'PAID'} />
+              <PayDropdown
+                amount={amount}
+                setAmount={setAmount}
+                id={cc.id}
+                disabled={cc.status === "PAID"}
+              />
             </Table.Cell>
           </Table.Row>
         ))}

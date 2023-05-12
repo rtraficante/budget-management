@@ -11,6 +11,7 @@ export const transactionRouter = createTRPCRouter({
       include: {
         category: true,
       },
+      orderBy: [{ date: "desc" }],
     });
 
     return transactions;

@@ -1,0 +1,77 @@
+import { z } from "zod";
+import { createTRPCRouter, privateProcedure } from "../trpc";
+import { isPassedDue } from "~/utils/isPassedDue";
+
+export const subscriptionRouter = createTRPCRouter({
+  getAll: privateProcedure.query(async ({ ctx }) => {
+    const subs = await ctx.prisma.subscription.findMany({
+      where: {
+        userId: ctx.currentUserId,
+      },
+    });
+    for (const [idx, sub] of subs.entries()) {
+      const today = new Date().toLocaleDateString();
+      const chargeDate = sub.chargeDate.toLocaleDateString();
+
+      if (isPassedDue(chargeDate, today)) {
+        await ctx.prisma.transaction.create({
+          data: {
+            date: today,
+            amount: sub.recurringCharge,
+            description: `${sub.company} - Subscription`,
+            categoryId: 4,
+            userId: ctx.currentUserId,
+          },
+        });
+
+        const todayDate = new Date();
+        let newMonth = todayDate.getMonth() + 1;
+        let newYear = todayDate.getFullYear();
+
+        if (newMonth > 12) {
+          newMonth = 1;
+          newYear = newYear + 1;
+        }
+
+        const newChargeDate = new Date(
+          `${newMonth}/${sub.chargeDate.getDate()}/${newYear}`
+        );
+
+        const updatedSub = await ctx.prisma.subscription.update({
+          where: {
+            id: sub.id,
+          },
+          data: {
+            chargeDate: newChargeDate,
+          },
+        });
+        subs[idx] = updatedSub;
+      }
+    }
+    return subs;
+  }),
+  add: privateProcedure
+    .input(
+      z.object({
+        company: z.string(),
+        plan: z.enum(["MONTHLY", "WEEKLY", "YEARLY"]),
+        chargeDate: z.number().min(1).max(31),
+        recurringCharge: z.number(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const month = new Date().getMonth() + 1;
+      const day = input.chargeDate;
+      const year = new Date().getFullYear();
+
+      return ctx.prisma.subscription.create({
+        data: {
+          company: input.company,
+          plan: input.plan,
+          chargeDate: new Date(`${month}/${day}/${year}`),
+          recurringCharge: input.recurringCharge,
+          userId: ctx.currentUserId,
+        },
+      });
+    }),
+});

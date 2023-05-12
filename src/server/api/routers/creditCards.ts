@@ -1,17 +1,7 @@
 import { z } from "zod";
 
 import { createTRPCRouter, privateProcedure } from "~/server/api/trpc";
-
-const isPassedDue = (dueDate: string, today: string) => {
-  const dueDateTime = new Date(dueDate).getTime();
-  const todayTime = new Date(today).getTime();
-
-  if (dueDateTime < todayTime) {
-    return true;
-  }
-
-  return false;
-};
+import { isPassedDue } from "~/utils/isPassedDue";
 
 export const creditCardRouter = createTRPCRouter({
   getAll: privateProcedure.query(async ({ ctx }) => {
@@ -79,10 +69,13 @@ export const creditCardRouter = createTRPCRouter({
       const previousDue = new Date(creditCard.dueDate);
 
       let month = today.getMonth() + 2;
-      if (month > 12) month = 1;
 
       const day = previousDue.getDate();
-      const year = today.getFullYear();
+      let year = today.getFullYear();
+      if (month > 12) {
+        month = 1;
+        year = year + 1;
+      }
 
       await ctx.prisma.creditCard.update({
         where: {
