@@ -7,9 +7,10 @@ type Props = {
   amount: number;
   setAmount: Dispatch<SetStateAction<number>>;
   id: number;
+  disabled: boolean;
 };
 
-const PayDropdown = ({ amount, setAmount, id }: Props) => {
+const PayDropdown = ({ amount, setAmount, id, disabled }: Props) => {
   const ctx = api.useContext();
 
   const { mutate } = api.creditCard.pay.useMutation({
@@ -20,7 +21,7 @@ const PayDropdown = ({ amount, setAmount, id }: Props) => {
   });
 
   return (
-    <Dropdown label="Pay" dismissOnClick={false}>
+    <Dropdown label="Pay" dismissOnClick={false} disabled={disabled}>
       <Dropdown.Item>
         <form
           onSubmit={(e) => {
