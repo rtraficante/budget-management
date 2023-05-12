@@ -1,14 +1,15 @@
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
-import React from "react";
+import React, { type Dispatch, type SetStateAction } from "react";
 
 import { HiCash, HiClipboardList, HiCreditCard, HiUser } from "react-icons/hi";
 import Link from "next/link";
 
 type Props = {
   sidebarOpen: boolean;
+  setSidebarOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-const Nav = ({ sidebarOpen }: Props) => {
+const Nav = ({ sidebarOpen, setSidebarOpen }: Props) => {
   const user = useUser();
 
   return (
@@ -93,6 +94,7 @@ const Nav = ({ sidebarOpen }: Props) => {
           sidebarOpen ? "lg:hidden" : "hidden"
         } fixed inset-0 z-10  bg-gray-900/50 dark:bg-gray-900/90`}
         id="sidebarBackdrop"
+        onClick={() => setSidebarOpen(false)}
       ></div>
     </>
   );

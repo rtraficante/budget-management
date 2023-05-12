@@ -16,7 +16,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
     <ClerkProvider {...pageProps}>
       <div className="flex">
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-        <Nav sidebarOpen={sidebarOpen} />
+        <Nav sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <Layout>
           <Component {...pageProps} />
         </Layout>
