@@ -1,14 +1,15 @@
 import { Prisma, type Category, type Transaction } from "@prisma/client";
 import { Button, Checkbox, Table } from "flowbite-react";
-import { type ChangeEvent } from "react";
+import { type Dispatch, type ChangeEvent, type SetStateAction } from "react";
 import { useState } from "react";
 import { HiTrash } from "react-icons/hi";
 
 interface Props {
   data: (Transaction & { category: Category | null })[];
+  setShowModal: Dispatch<SetStateAction<boolean>>;
 }
 
-const TransactionTable = ({ data }: Props) => {
+const TransactionTable = ({ data, setShowModal }: Props) => {
   const [checkedIds, setCheckedIds] = useState<string[]>([]);
 
   const handleCheckbox = (e: ChangeEvent<HTMLInputElement>) => {
@@ -28,8 +29,10 @@ const TransactionTable = ({ data }: Props) => {
           <Table.HeadCell className="!p-4">
             <Button
               color="failure"
+              type="button"
               size="sm"
               className={`${checkedIds.length < 1 ? "invisible" : ""} m-0`}
+              onClick={() => setShowModal(true)}
             >
               <HiTrash />
             </Button>
