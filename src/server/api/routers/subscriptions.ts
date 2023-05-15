@@ -28,7 +28,7 @@ export const subscriptionRouter = createTRPCRouter({
         });
 
         const todayDate = new Date();
-        let newMonth = todayDate.getMonth() + 1;
+        let newMonth = todayDate.getMonth() + 2;
         let newYear = todayDate.getFullYear();
 
         if (newMonth > 12) {

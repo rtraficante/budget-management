@@ -79,7 +79,6 @@ const AddSubscriptionForm = () => {
               name="recurringCharge"
               placeholder="Please enter an amount"
               value={formData.recurringCharge}
-              fixedDecimalLength={2}
               decimalsLimit={2}
               onValueChange={(value, name) =>
                 setFormData({ ...formData, [name as string]: value })
