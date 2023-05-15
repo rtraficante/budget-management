@@ -16,8 +16,6 @@ export const transactionRouter = createTRPCRouter({
       orderBy: [{ date: "desc" }],
     });
 
-    console.log(transactions[0]);
-
     const formattedTransactions: FormattedTransactionWithCategory[] =
       transactions.map((val) => {
         return {

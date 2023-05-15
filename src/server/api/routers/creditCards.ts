@@ -120,4 +120,17 @@ export const creditCardRouter = createTRPCRouter({
         },
       });
     }),
+  delete: privateProcedure
+    .input(
+      z.object({
+        id: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.creditCard.delete({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
 });
