@@ -1,8 +1,5 @@
-import { Prisma } from "@prisma/client";
-import { Button, Checkbox, Table } from "flowbite-react";
 import { type Dispatch, type ChangeEvent, type SetStateAction } from "react";
 import { useState } from "react";
-import { HiTrash } from "react-icons/hi";
 import DataTable from "./DataTable";
 import { type FormattedTransactionWithCategory } from "~/types";
 

@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { z } from "zod";
 
 import { createTRPCRouter, privateProcedure } from "~/server/api/trpc";
@@ -20,7 +21,7 @@ export const transactionRouter = createTRPCRouter({
         return {
           id: val.id,
           date: val.date.toLocaleDateString(),
-          amount: val.amount,
+          amount: new Prisma.Decimal(val.amount).toNumber().toFixed(2),
           description: val.description,
           category: val.category?.name,
         };

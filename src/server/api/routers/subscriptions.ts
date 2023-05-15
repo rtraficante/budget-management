@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { createTRPCRouter, privateProcedure } from "../trpc";
 import { isPassedDue } from "~/utils/isPassedDue";
+import { Prisma } from "@prisma/client";
+import { type FormattedSubscription } from "~/types";
 
 export const subscriptionRouter = createTRPCRouter({
   getAll: privateProcedure.query(async ({ ctx }) => {
@@ -49,8 +51,19 @@ export const subscriptionRouter = createTRPCRouter({
         subs[idx] = updatedSub;
       }
     }
-    return subs;
+    const formattedSubscriptions: FormattedSubscription[] = subs.map((sub) => ({
+      id: sub.id,
+      company: sub.company,
+      plan: sub.plan,
+      recurringCharge: new Prisma.Decimal(sub.recurringCharge)
+        .toNumber()
+        .toFixed(2),
+      chargeDate: sub.chargeDate.toLocaleDateString(),
+    }));
+
+    return formattedSubscriptions;
   }),
+
   add: privateProcedure
     .input(
       z.object({

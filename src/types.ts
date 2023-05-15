@@ -1,9 +1,15 @@
-import { type Decimal } from "@prisma/client/runtime";
-
 export type FormattedTransactionWithCategory = {
   date: string;
   category: string | undefined;
   id: number;
-  amount: Decimal;
+  amount: string;
   description: string | null;
+};
+
+export type FormattedSubscription = {
+  id: number;
+  company: string;
+  plan: string;
+  recurringCharge: string;
+  chargeDate: string;
 };

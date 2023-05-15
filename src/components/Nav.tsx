@@ -92,7 +92,7 @@ const Nav = ({ sidebarOpen, setSidebarOpen }: Props) => {
       <div
         className={`${
           sidebarOpen ? "lg:hidden" : "hidden"
-        } fixed inset-0 z-10  bg-gray-900/50 dark:bg-gray-900/90`}
+        } fixed inset-0 z-30 bg-gray-900/50 dark:bg-gray-900/90`}
         id="sidebarBackdrop"
         onClick={() => setSidebarOpen(false)}
       ></div>

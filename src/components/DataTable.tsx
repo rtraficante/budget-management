@@ -12,54 +12,29 @@ const objectValues = <T extends object>(obj: T) => {
     .map((objKey) => obj[objKey as keyof T]);
 };
 
-// const objectKeys = <T extends object>(obj: T) => {
-//   return Object.keys(obj).map((objKey) => objKey as keyof T);
-// };
-
 type MinTableItem = {
   id: number;
 };
 
-type CustomRenderers<T extends MinTableItem> = Partial<
-  Record<keyof T, (it: T) => React.ReactNode>
->;
-
 type TableHeaders<T> = Record<keyof T, string>;
 
 type Props<T extends MinTableItem> = {
-  checkedIds: string[];
-  setShowModal: Dispatch<SetStateAction<boolean>>;
+  checkedIds?: string[];
+  setShowModal?: Dispatch<SetStateAction<boolean>>;
   headers: Omit<TableHeaders<T>, "id">;
   handleCheckbox: (e: ChangeEvent<HTMLInputElement>) => void;
-  customRenderers?: CustomRenderers<T>;
   data: T[];
-  editable: boolean;
+  editable?: boolean;
 };
 
 const DataTable = <T extends MinTableItem>({
-  checkedIds,
+  checkedIds = [],
   setShowModal,
   headers,
   data,
   handleCheckbox,
-  editable,
+  editable = false,
 }: Props<T>) => {
-  // const renderRow = (item: T) => {
-  //   return (
-  //     <Table.Row>
-  //       {objectKeys(item).map((itemProp) => {
-  //         const customRenderer = customRenderers?.[itemProp]
-
-  //         if (customRenderer) {
-  //           return <Table.Cell>{customRenderer(item)}</Table.Cell>
-  //         }
-
-  //         return <Table.Cell>{item[itemProp] ? item[itemProp] : ""}</Table.Cell>
-  //       })}
-  //     </Table.Row>
-  //   )
-  // }
-
   return (
     <div className="relative overflow-x-auto">
       <Table hoverable={true}>
@@ -70,7 +45,7 @@ const DataTable = <T extends MinTableItem>({
               type="button"
               size="sm"
               className={`${checkedIds.length < 1 ? "invisible" : ""} m-0`}
-              onClick={() => setShowModal(true)}
+              onClick={() => (setShowModal ? setShowModal(true) : null)}
             >
               <HiTrash />
             </Button>
@@ -78,9 +53,11 @@ const DataTable = <T extends MinTableItem>({
           {objectValues(headers).map((val, i) => {
             return <Table.HeadCell key={i}>{val}</Table.HeadCell>;
           })}
-          <Table.HeadCell>
-            <span className="sr-only">Edit</span>
-          </Table.HeadCell>
+          {editable ? (
+            <Table.HeadCell>
+              <span className="sr-only">Edit</span>
+            </Table.HeadCell>
+          ) : null}
         </Table.Head>
         <Table.Body className="divide-y">
           {data.map((item) => (
@@ -92,10 +69,14 @@ const DataTable = <T extends MinTableItem>({
                 <Checkbox value={item.id} onChange={handleCheckbox} />
               </Table.Cell>
               {objectValues(item).map((entry, i) => {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                //@ts-ignore
-                // TODO: Figure out this error
-                return <Table.Cell key={i}>{entry}</Table.Cell>;
+                return (
+                  <Table.Cell key={i} className="text-gray-900">
+                    {/* TODO: Figure out this error */}
+                    {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                    {/* @ts-ignore */}
+                    {entry}
+                  </Table.Cell>
+                );
               })}
               {editable ? (
                 <Table.Cell>
