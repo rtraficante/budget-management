@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { createTRPCRouter, privateProcedure } from "~/server/api/trpc";
+import { type FormattedTransactionWithCategory } from "~/types";
 
 export const transactionRouter = createTRPCRouter({
   getAll: privateProcedure.query(async ({ ctx }) => {
@@ -14,7 +15,18 @@ export const transactionRouter = createTRPCRouter({
       orderBy: [{ date: "desc" }],
     });
 
-    return transactions;
+    const formattedTransactions: FormattedTransactionWithCategory[] =
+      transactions.map((val) => {
+        return {
+          id: val.id,
+          date: val.date.toLocaleDateString(),
+          amount: val.amount,
+          description: val.description,
+          category: val.category?.name,
+        };
+      });
+
+    return formattedTransactions;
   }),
   add: privateProcedure
     .input(
