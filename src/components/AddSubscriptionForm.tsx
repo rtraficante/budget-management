@@ -1,4 +1,4 @@
-import { Button, Label, TextInput } from "flowbite-react";
+import { Button, Label, Spinner, TextInput } from "flowbite-react";
 import React, { type ChangeEvent, useState } from "react";
 import CurrencyInput from "react-currency-input-field";
 import { api } from "~/utils/api";
@@ -20,7 +20,7 @@ const AddSubscriptionForm = () => {
 
   const ctx = api.useContext();
 
-  const { mutate, error } = api.subscription.add.useMutation({
+  const { mutate, error, isLoading } = api.subscription.add.useMutation({
     onSuccess: () => {
       setFormData({
         chargeDate: 1,
@@ -124,7 +124,17 @@ const AddSubscriptionForm = () => {
         </div>
       </div>
 
-      <Button type="submit">Submit</Button>
+      <Button type="submit">
+        {" "}
+        {isLoading ? (
+          <>
+            <Spinner />
+            <span className="pl-3">Loading...</span>
+          </>
+        ) : (
+          "Submit"
+        )}
+      </Button>
     </form>
   );
 };

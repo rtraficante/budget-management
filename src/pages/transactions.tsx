@@ -24,7 +24,7 @@ const Transactions: NextPage = () => {
 
   const ctx = api.useContext();
 
-  const { mutate } = api.transaction.delete.useMutation({
+  const { mutate, isLoading } = api.transaction.delete.useMutation({
     onSuccess: () => {
       setShowModal(false);
       void ctx.transaction.getAll.invalidate();
@@ -36,12 +36,15 @@ const Transactions: NextPage = () => {
     mutate({ ids: checkedIds });
   };
 
+  console.log(data);
+
   return (
     <main className="m-8 mx-auto mt-20 flex w-full max-w-[1000px] flex-col gap-4">
       <DeleteModal
         setShowModal={setShowModal}
         handleDelete={handleDelete}
         showModal={showModal}
+        isLoading={isLoading}
         message="Are you sure you want to delete this transaction(s)?"
       />
       <div className="flex flex-col">

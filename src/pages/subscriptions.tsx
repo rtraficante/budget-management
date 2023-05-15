@@ -24,7 +24,7 @@ const Subscriptions: NextPage = () => {
 
   const ctx = api.useContext();
 
-  const { mutate } = api.subscription.delete.useMutation({
+  const { mutate, isLoading } = api.subscription.delete.useMutation({
     onSuccess: () => {
       setShowModal(false);
       void ctx.subscription.getAll.invalidate();
@@ -39,6 +39,7 @@ const Subscriptions: NextPage = () => {
   return (
     <main className="m-8 mx-auto mt-20 flex w-full max-w-[1000px] flex-col gap-4">
       <DeleteModal
+        isLoading={isLoading}
         setShowModal={setShowModal}
         handleDelete={handleDelete}
         showModal={showModal}

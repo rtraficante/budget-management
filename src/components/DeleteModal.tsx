@@ -1,4 +1,4 @@
-import { Button, Modal } from "flowbite-react";
+import { Button, Modal, Spinner } from "flowbite-react";
 import React, { type Dispatch, type SetStateAction } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
@@ -7,6 +7,7 @@ type Props = {
   showModal: boolean;
   setShowModal: Dispatch<SetStateAction<boolean>>;
   message?: string;
+  isLoading?: boolean;
 };
 
 const DeleteModal = ({
@@ -14,6 +15,7 @@ const DeleteModal = ({
   showModal,
   setShowModal,
   message,
+  isLoading,
 }: Props) => {
   return (
     <Modal
@@ -31,7 +33,14 @@ const DeleteModal = ({
           </h3>
           <div className="flex justify-center gap-4">
             <Button color="failure" onClick={handleDelete}>
-              Yes, I&apos;m sure
+              {isLoading ? (
+                <>
+                  <Spinner />
+                  <span className="pl-3">Deleting...</span>
+                </>
+              ) : (
+                "Yes, I'm Sure"
+              )}
             </Button>
             <Button color="gray" onClick={() => setShowModal(false)}>
               No, cancel

@@ -1,4 +1,4 @@
-import { Button, Label, TextInput } from "flowbite-react";
+import { Button, Label, Spinner, TextInput } from "flowbite-react";
 import React, { type ChangeEvent, useState } from "react";
 import CurrencyInput from "react-currency-input-field";
 import { api } from "~/utils/api";
@@ -13,7 +13,7 @@ const TransactionForm = () => {
 
   const ctx = api.useContext();
 
-  const { mutate } = api.transaction.add.useMutation({
+  const { mutate, isLoading } = api.transaction.add.useMutation({
     onSuccess: () => {
       setFormData({
         date: new Date().toISOString().substring(0, 10),
@@ -33,6 +33,8 @@ const TransactionForm = () => {
     const newDate = new Date(e.currentTarget.value)
       .toISOString()
       .substring(0, 10);
+
+    console.log(newDate);
 
     setFormData({ ...formData, date: newDate });
   };
@@ -83,7 +85,6 @@ const TransactionForm = () => {
               name="amount"
               placeholder="Please enter an amount"
               value={formData.amount}
-              fixedDecimalLength={2}
               decimalsLimit={2}
               onValueChange={(value, name) =>
                 setFormData({ ...formData, [name as string]: value })
@@ -125,7 +126,16 @@ const TransactionForm = () => {
           />
         </div>
       </div>
-      <Button type="submit">Submit</Button>
+      <Button type="submit">
+        {isLoading ? (
+          <>
+            <Spinner />
+            <span className="pl-3">Loading...</span>
+          </>
+        ) : (
+          "Submit"
+        )}
+      </Button>
     </form>
   );
 };

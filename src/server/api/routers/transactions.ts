@@ -16,11 +16,13 @@ export const transactionRouter = createTRPCRouter({
       orderBy: [{ date: "desc" }],
     });
 
+    console.log(transactions[0]);
+
     const formattedTransactions: FormattedTransactionWithCategory[] =
       transactions.map((val) => {
         return {
           id: val.id,
-          date: val.date.toLocaleDateString(),
+          date: val.date.toLocaleDateString("en-US", { timeZone: "UTC" }),
           amount: new Prisma.Decimal(val.amount).toNumber().toFixed(2),
           description: val.description,
           category: val.category?.name,
