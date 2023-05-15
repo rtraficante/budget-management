@@ -1,28 +1,26 @@
+import { type Dispatch, type ChangeEvent, type SetStateAction } from "react";
 import DataTable from "./DataTable";
 import { type FormattedSubscription } from "~/types";
-import { type ChangeEvent, useState } from "react";
 
 interface Props {
   data: FormattedSubscription[];
+  checkedIds: number[];
+  handleCheckbox: (e: ChangeEvent<HTMLInputElement>) => void;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
 }
 
-const SubscriptionTable = ({ data }: Props) => {
-  const [checkedIds, setCheckedIds] = useState<string[]>([]);
-
-  const handleCheckbox = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value, checked } = e.target;
-
-    if (checked) {
-      setCheckedIds((prev) => [...prev, value]);
-    } else {
-      setCheckedIds((prev) => prev.filter((id) => id !== value));
-    }
-  };
+const SubscriptionTable = ({
+  data,
+  checkedIds,
+  handleCheckbox,
+  setShowModal,
+}: Props) => {
   return (
     <>
       <DataTable
         data={data}
         handleCheckbox={handleCheckbox}
+        setShowModal={setShowModal}
         checkedIds={checkedIds}
         headers={{
           company: "Company",

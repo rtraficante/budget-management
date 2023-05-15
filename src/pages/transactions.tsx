@@ -1,6 +1,6 @@
 import { Button } from "flowbite-react";
 import { type NextPage } from "next";
-import { useState } from "react";
+import { type ChangeEvent, useState } from "react";
 import DeleteModal from "~/components/DeleteModal";
 import TransactionForm from "~/components/TransactionForm";
 import TransactionTable from "~/components/TransactionTable";
@@ -10,9 +10,30 @@ const Transactions: NextPage = () => {
   const { data } = api.transaction.getAll.useQuery();
   const [toggleForm, setToggleForm] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [checkedIds, setCheckedIds] = useState<number[]>([]);
+
+  const handleCheckbox = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = e.target;
+
+    if (checked) {
+      setCheckedIds((prev) => [...prev, Number(value)]);
+    } else {
+      setCheckedIds((prev) => prev.filter((id) => id !== Number(value)));
+    }
+  };
+
+  const ctx = api.useContext();
+
+  const { mutate } = api.transaction.delete.useMutation({
+    onSuccess: () => {
+      setShowModal(false);
+      void ctx.transaction.getAll.invalidate();
+      setCheckedIds([]);
+    },
+  });
 
   const handleDelete = () => {
-    return;
+    mutate({ ids: checkedIds });
   };
 
   return (
@@ -21,7 +42,7 @@ const Transactions: NextPage = () => {
         setShowModal={setShowModal}
         handleDelete={handleDelete}
         showModal={showModal}
-        message="Are you sure you want to delete these transactions?"
+        message="Are you sure you want to delete this transaction(s)?"
       />
       <div className="flex flex-col">
         <Button
@@ -34,7 +55,12 @@ const Transactions: NextPage = () => {
         {toggleForm ? <TransactionForm /> : null}
       </div>
       {data !== undefined ? (
-        <TransactionTable data={data} setShowModal={setShowModal} />
+        <TransactionTable
+          data={data}
+          setShowModal={setShowModal}
+          handleCheckbox={handleCheckbox}
+          checkedIds={checkedIds}
+        />
       ) : null}
     </main>
   );

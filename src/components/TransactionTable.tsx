@@ -1,26 +1,20 @@
 import { type Dispatch, type ChangeEvent, type SetStateAction } from "react";
-import { useState } from "react";
 import DataTable from "./DataTable";
 import { type FormattedTransactionWithCategory } from "~/types";
 
 type Props = {
   data: FormattedTransactionWithCategory[];
   setShowModal: Dispatch<SetStateAction<boolean>>;
+  checkedIds: number[];
+  handleCheckbox: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
-const TransactionTable = ({ data, setShowModal }: Props) => {
-  const [checkedIds, setCheckedIds] = useState<string[]>([]);
-
-  const handleCheckbox = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value, checked } = e.target;
-
-    if (checked) {
-      setCheckedIds((prev) => [...prev, value]);
-    } else {
-      setCheckedIds((prev) => prev.filter((id) => id !== value));
-    }
-  };
-
+const TransactionTable = ({
+  data,
+  setShowModal,
+  handleCheckbox,
+  checkedIds,
+}: Props) => {
   return (
     <>
       <DataTable

@@ -88,4 +88,17 @@ export const subscriptionRouter = createTRPCRouter({
         },
       });
     }),
+  delete: privateProcedure
+    .input(
+      z.object({
+        ids: z.array(z.number()),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.subscription.deleteMany({
+        where: {
+          id: { in: input.ids },
+        },
+      });
+    }),
 });

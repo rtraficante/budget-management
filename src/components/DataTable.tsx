@@ -19,7 +19,7 @@ type MinTableItem = {
 type TableHeaders<T> = Record<keyof T, string>;
 
 type Props<T extends MinTableItem> = {
-  checkedIds?: string[];
+  checkedIds?: number[];
   setShowModal?: Dispatch<SetStateAction<boolean>>;
   headers: Omit<TableHeaders<T>, "id">;
   handleCheckbox: (e: ChangeEvent<HTMLInputElement>) => void;
