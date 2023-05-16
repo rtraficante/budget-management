@@ -1,5 +1,10 @@
 import { type AppType } from "next/app";
-import { ClerkProvider } from "@clerk/nextjs";
+import {
+  ClerkProvider,
+  RedirectToSignIn,
+  SignedIn,
+  SignedOut,
+} from "@clerk/nextjs";
 
 import { api } from "~/utils/api";
 
@@ -14,13 +19,18 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 
   return (
     <ClerkProvider {...pageProps}>
-      <div className="flex">
-        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-        <Nav sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </div>
+      <SignedIn>
+        <div className="flex">
+          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+          <Nav sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </div>
+      </SignedIn>
+      <SignedOut>
+        <RedirectToSignIn />
+      </SignedOut>
     </ClerkProvider>
   );
 };
