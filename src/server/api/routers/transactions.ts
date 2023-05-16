@@ -107,7 +107,9 @@ export const transactionRouter = createTRPCRouter({
   }),
   getSpendingStats: privateProcedure.query(async ({ ctx }) => {
     const today = new Date();
-    const transactions = await ctx.prisma.transaction.findMany({
+
+    // This Month Stats
+    const thisMonthTransactions = await ctx.prisma.transaction.findMany({
       where: {
         userId: ctx.currentUserId,
         date: {
@@ -116,30 +118,100 @@ export const transactionRouter = createTRPCRouter({
       },
     });
 
+    let lastMonth = today.getMonth();
+    if (lastMonth === 0) lastMonth = 12;
+
     const lastMonthTransactions = await ctx.prisma.transaction.findMany({
       where: {
         userId: ctx.currentUserId,
         date: {
-          gte: new Date(`${today.getMonth()}/01/${today.getFullYear()}`),
+          gte: new Date(`${lastMonth}/01/${today.getFullYear()}`),
+          lt: new Date(`${today.getMonth() + 1}/01/${today.getFullYear()}`),
         },
       },
     });
 
     let lastMonthSpendingTotal = 0;
     let thisMonthSpendingTotal = 0;
-    transactions.forEach((t) => {
+    thisMonthTransactions.forEach((t) => {
       thisMonthSpendingTotal += Number(t.amount);
     });
     lastMonthTransactions.forEach((t) => {
       lastMonthSpendingTotal += Number(t.amount);
     });
 
+    // Last Seven Stats
+    const lastSevenDate = new Date(today.getTime() - 6 * 24 * 60 * 60 * 1000);
+
+    const lastSevenTransactions = await ctx.prisma.transaction.findMany({
+      where: {
+        userId: ctx.currentUserId,
+        date: {
+          gte: lastSevenDate,
+        },
+      },
+    });
+
+    const previousSevenDate = new Date(
+      lastSevenDate.getTime() - 6 * 24 * 60 * 60 * 1000
+    );
+
+    const previousSevenTransactions = await ctx.prisma.transaction.findMany({
+      where: {
+        userId: ctx.currentUserId,
+        date: {
+          gte: previousSevenDate,
+          lte: lastSevenDate,
+        },
+      },
+    });
+
+    let lastSevenSpendingTotal = 0;
+    let previousSevenSpendingTotal = 0;
+    lastSevenTransactions.forEach((t) => {
+      lastSevenSpendingTotal += Number(t.amount);
+    });
+    previousSevenTransactions.forEach((t) => {
+      previousSevenSpendingTotal += Number(t.amount);
+    });
+
+    // Average Monthly Stats
+    const result = await ctx.prisma.$queryRaw<
+      { month: string; average: string }[]
+    >(
+      Prisma.sql`SELECT DATE_TRUNC('month', date) as month, SUM(amount::numeric) as average FROM "public"."Transaction" GROUP BY month`
+    );
+
+    const averageMonthlySpending =
+      result.reduce((total, { average }) => total + parseFloat(average), 0) /
+      result.length;
+
+
+
     return {
+      averageMonthlySpending: averageMonthlySpending,
       thisMonthSpending: {
         total: thisMonthSpendingTotal,
-        percentage: `${Math.ceil(
-          (thisMonthSpendingTotal / lastMonthSpendingTotal) * 100
-        )}%`,
+        percentage: {
+          num: `${Math.ceil(
+            ((thisMonthSpendingTotal - lastMonthSpendingTotal) /
+              ((thisMonthSpendingTotal + lastMonthSpendingTotal) / 2)) *
+              100
+          )}%`,
+          greaterThanPrevious: thisMonthSpendingTotal > lastMonthSpendingTotal,
+        },
+      },
+      lastSevenSpending: {
+        total: lastSevenSpendingTotal,
+        percentage: {
+          num: `${Math.ceil(
+            ((lastSevenSpendingTotal - previousSevenSpendingTotal) /
+              ((lastSevenSpendingTotal + previousSevenSpendingTotal) / 2)) *
+              100
+          )}%`,
+          greaterThanPrevious:
+            lastSevenSpendingTotal > previousSevenSpendingTotal,
+        },
       },
     };
   }),

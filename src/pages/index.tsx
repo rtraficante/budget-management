@@ -20,7 +20,9 @@ const Home: NextPage = () => {
       </Head>
       <main className="m-2 mx-auto mt-20 w-full">
         <DashboardTopBars
+          averageMontlySpending={spendingStats?.averageMonthlySpending}
           thisMonthSpending={spendingStats?.thisMonthSpending}
+          lastSevenSpending={spendingStats?.lastSevenSpending}
         />
         <div className="grid grid-cols-1 gap-4 p-4  lg:grid-cols-3">
           <PieChart categoryNames={categoryNames} totalAmounts={totalAmounts} />
