@@ -4,6 +4,11 @@ import { z } from "zod";
 import { createTRPCRouter, privateProcedure } from "~/server/api/trpc";
 import { type FormattedTransactionWithCategory } from "~/types";
 
+type TotalsByCategory = {
+  name: string;
+  total: string;
+};
+
 export const transactionRouter = createTRPCRouter({
   getAll: privateProcedure.query(async ({ ctx }) => {
     const transactions = await ctx.prisma.transaction.findMany({
@@ -70,4 +75,72 @@ export const transactionRouter = createTRPCRouter({
         },
       });
     }),
+  getTotalByCategory: privateProcedure.query(async ({ ctx }) => {
+    const categories = await ctx.prisma.category.findMany({
+      where: {
+        name: {
+          not: "Credit Bill",
+        },
+      },
+      include: {
+        transactions: {
+          where: {
+            userId: ctx.currentUserId,
+          },
+        },
+      },
+    });
+    const categoriesWithTransactions = categories.filter(
+      (c) => c.transactions.length > 0
+    );
+
+    const totals: TotalsByCategory[] = [];
+    categoriesWithTransactions.forEach((c) => {
+      let total = 0;
+      c.transactions.forEach((t) => {
+        total += Number(t.amount);
+      });
+      totals.push({ name: c.name, total: total.toFixed(2) });
+    });
+
+    return totals;
+  }),
+  getSpendingStats: privateProcedure.query(async ({ ctx }) => {
+    const today = new Date();
+    const transactions = await ctx.prisma.transaction.findMany({
+      where: {
+        userId: ctx.currentUserId,
+        date: {
+          gte: new Date(`${today.getMonth() + 1}/01/${today.getFullYear()}`),
+        },
+      },
+    });
+
+    const lastMonthTransactions = await ctx.prisma.transaction.findMany({
+      where: {
+        userId: ctx.currentUserId,
+        date: {
+          gte: new Date(`${today.getMonth()}/01/${today.getFullYear()}`),
+        },
+      },
+    });
+
+    let lastMonthSpendingTotal = 0;
+    let thisMonthSpendingTotal = 0;
+    transactions.forEach((t) => {
+      thisMonthSpendingTotal += Number(t.amount);
+    });
+    lastMonthTransactions.forEach((t) => {
+      lastMonthSpendingTotal += Number(t.amount);
+    });
+
+    return {
+      thisMonthSpending: {
+        total: thisMonthSpendingTotal,
+        percentage: `${Math.ceil(
+          (thisMonthSpendingTotal / lastMonthSpendingTotal) * 100
+        )}%`,
+      },
+    };
+  }),
 });
