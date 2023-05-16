@@ -12,7 +12,6 @@ const TransactionForm = () => {
   });
 
   const ctx = api.useContext();
-
   const { mutate, isLoading } = api.transaction.add.useMutation({
     onSuccess: () => {
       setFormData({
@@ -24,6 +23,8 @@ const TransactionForm = () => {
       void ctx.transaction.getAll.invalidate();
     },
   });
+
+  const { data: categories } = api.category.getAllNames.useQuery();
 
   const handleFormChange = (e: React.FormEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.currentTarget.name]: e.currentTarget.value });
@@ -105,10 +106,14 @@ const TransactionForm = () => {
               name="category"
               value={formData.category}
               onChange={handleSelectChange}
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              className="block w-full  rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             >
               <option>Choose a category</option>
-              <option value="Food">Food</option>
+              {categories?.map((c) => (
+                <option value={c} key={c}>
+                  {c}
+                </option>
+              ))}
             </select>
           </div>
         </div>
