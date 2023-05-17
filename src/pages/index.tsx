@@ -1,12 +1,20 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import { Bar } from "react-chartjs-2";
+import BarChart from "~/components/BarChart";
 import DashboardTopBars from "~/components/DashboardTopBars";
-import PieChart from "~/components/PieChart";
+import DoughnutChart from "~/components/DoughnutChart";
+import RecentTransactions from "~/components/RecentTransactions";
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
   const { data: total } = api.transaction.getTotalByCategory.useQuery();
-  const { data: spendingStats } = api.transaction.getSpendingStats.useQuery();
+  const { data: spendingStats, isLoading: statsLoading } =
+    api.transaction.getSpendingStats.useQuery();
+  const { data: recentTransactions, isLoading: transactionsLoading } =
+    api.transaction.getRecentTransactions.useQuery();
+  const { data: transactionsByMonth } =
+    api.transaction.getAmountSpentPerMonth.useQuery();
 
   const categoryNames = total ? total.map((t) => t.name) : [];
   const totalAmounts = total ? total.map((t) => t.total) : [];
@@ -23,10 +31,19 @@ const Home: NextPage = () => {
           averageMontlySpending={spendingStats?.averageMonthlySpending}
           thisMonthSpending={spendingStats?.thisMonthSpending}
           lastSevenSpending={spendingStats?.lastSevenSpending}
+          isLoading={statsLoading}
         />
-        <div className="grid grid-cols-1 gap-4 p-4  lg:grid-cols-3">
-          <PieChart categoryNames={categoryNames} totalAmounts={totalAmounts} />
+        <div className="grid grid-cols-1 gap-4 p-4 lg:grid-cols-3">
+          <DoughnutChart
+            categoryNames={categoryNames}
+            totalAmounts={totalAmounts}
+          />
+          <RecentTransactions
+            transactions={recentTransactions}
+            isLoading={transactionsLoading}
+          />
         </div>
+        <BarChart amountsPerMonth={transactionsByMonth} />
       </main>
     </>
   );

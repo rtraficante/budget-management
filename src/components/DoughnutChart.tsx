@@ -1,5 +1,5 @@
 import React from "react";
-import { Pie } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
@@ -9,10 +9,10 @@ type Props = {
   totalAmounts: string[];
 };
 
-const PieChart = ({ categoryNames, totalAmounts }: Props) => {
+const DoughnutChart = ({ categoryNames, totalAmounts }: Props) => {
   return (
-    <div className="relative col-span-2 w-full rounded-lg border bg-white p-4 md:h-[50vh]">
-      <Pie
+    <div className="relative col-span-2 flex h-[50vh] w-full rounded-lg border bg-white p-4 lg:h-[70vh]">
+      <Doughnut
         options={{
           responsive: true,
           maintainAspectRatio: false,
@@ -22,13 +22,12 @@ const PieChart = ({ categoryNames, totalAmounts }: Props) => {
             },
             title: {
               display: true,
-              text: "Monthly Spending",
+              text: "",
             },
           },
         }}
         data={{
           labels: categoryNames,
-
           datasets: [
             {
               label: "Money Spent",
@@ -57,4 +56,4 @@ const PieChart = ({ categoryNames, totalAmounts }: Props) => {
   );
 };
 
-export default PieChart;
+export default DoughnutChart;

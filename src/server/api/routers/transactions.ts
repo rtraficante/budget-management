@@ -76,6 +76,7 @@ export const transactionRouter = createTRPCRouter({
       });
     }),
   getTotalByCategory: privateProcedure.query(async ({ ctx }) => {
+    const today = new Date();
     const categories = await ctx.prisma.category.findMany({
       where: {
         name: {
@@ -86,6 +87,9 @@ export const transactionRouter = createTRPCRouter({
         transactions: {
           where: {
             userId: ctx.currentUserId,
+            date: {
+              gte: new Date(`01/01/${today.getFullYear()}`),
+            },
           },
         },
       },
@@ -186,8 +190,6 @@ export const transactionRouter = createTRPCRouter({
       result.reduce((total, { average }) => total + parseFloat(average), 0) /
       result.length;
 
-
-
     return {
       averageMonthlySpending: averageMonthlySpending,
       thisMonthSpending: {
@@ -214,5 +216,41 @@ export const transactionRouter = createTRPCRouter({
         },
       },
     };
+  }),
+  getRecentTransactions: privateProcedure.query(({ ctx }) => {
+    return ctx.prisma.transaction.findMany({
+      where: {
+        userId: ctx.currentUserId,
+      },
+      orderBy: [{ date: "desc" }],
+      take: 10,
+      include: {
+        category: true,
+      },
+    });
+  }),
+  getAmountSpentPerMonth: privateProcedure.query(async ({ ctx }) => {
+    const currentYear = new Date().getFullYear();
+    const result = await ctx.prisma.$queryRaw<{ month: string; sum: string }[]>`
+    SELECT
+      TO_CHAR(months.month, 'YYYY-MM') as month,
+      COALESCE(SUM(transaction.amount::numeric), '0') as sum
+    FROM
+      (
+        SELECT
+          DATE_TRUNC('month', (date_trunc('year', NOW()) + interval '1 month' * generate_series(0, 11))) as month
+      ) months
+      LEFT JOIN "public"."Transaction" AS transaction ON DATE_TRUNC('month', transaction.date) = months.month
+    WHERE
+      DATE_PART('year', months.month) = ${currentYear}
+    GROUP BY
+      months.month
+    ORDER BY
+      months.month
+  `;
+
+    console.log(result);
+
+    return result.map((s) => s.sum);
   }),
 });
