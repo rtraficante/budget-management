@@ -9,7 +9,7 @@ type Props = {
 
 const RecentTransactions = ({ transactions, isLoading }: Props) => {
   return (
-    <div className="relative col-span-1 m-auto flex h-[50vh] w-full flex-col items-center overflow-scroll rounded-lg border bg-white p-4 lg:h-[70vh]">
+    <div className="relative col-span-2 flex h-[50vh] w-full flex-col items-center overflow-scroll rounded-lg border bg-white p-4 lg:col-span-1 lg:h-[70vh]">
       <h1>Recent Transactions</h1>
       {isLoading ? (
         <div className="my-auto">

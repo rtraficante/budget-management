@@ -25,7 +25,7 @@ const DashboardTopBars = ({
   isLoading,
 }: Props) => {
   return (
-    <div className="grid gap-4 p-4 lg:grid-cols-6">
+    <div className="grid gap-4 lg:grid-cols-6">
       <div className="col-span-1 flex w-full justify-center rounded-lg border bg-white p-4 lg:col-span-2">
         {isLoading ? (
           <div className="my-auto flex">
