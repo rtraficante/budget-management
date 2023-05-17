@@ -28,7 +28,8 @@ const TransactionTable = ({
         checkedIds={checkedIds}
         setShowModal={setShowModal}
         handleCheckbox={handleCheckbox}
-        editable={true}
+        // TODO: enable editting for transactions
+        editable={false}
       />
     </>
   );

@@ -1,5 +1,6 @@
 import { Button } from "flowbite-react";
 import { type NextPage } from "next";
+import Head from "next/head";
 import { useState } from "react";
 import AddCreditCardForm from "~/components/AddCreditCardForm";
 import CreditCardTable from "~/components/CreditCardTable";
@@ -28,32 +29,39 @@ const CreditCards: NextPage = () => {
   };
 
   return (
-    <main className="m-8 mx-auto mt-20 flex w-full max-w-[1000px] flex-col gap-4">
-      <DeleteModal
-        setShowModal={setShowModal}
-        handleDelete={handleDelete}
-        showModal={showModal}
-        isLoading={isLoading}
-        message="Are you sure you want to delete this Credit Card?"
-      />
-      <div className="flex flex-col">
-        <Button
-          onClick={() => setToggleForm(!toggleForm)}
-          color={toggleForm ? `failure` : undefined}
-          className={"ml-auto"}
-        >
-          {toggleForm ? "X" : "Add Credit Card"}
-        </Button>
-        {toggleForm ? <AddCreditCardForm /> : null}
-      </div>
-      {data !== undefined ? (
-        <CreditCardTable
-          data={data}
+    <>
+      <Head>
+        <title>DimeWise - Credit Cards</title>
+        <meta name="description" content="Manage your finaces with ease" />
+        <link rel="icon" href="/logo.png" />
+      </Head>
+      <main className="m-8 mx-auto mt-20 flex w-full max-w-[1000px] flex-col gap-4">
+        <DeleteModal
           setShowModal={setShowModal}
-          setDeleteId={setDeleteId}
+          handleDelete={handleDelete}
+          showModal={showModal}
+          isLoading={isLoading}
+          message="Are you sure you want to delete this Credit Card?"
         />
-      ) : null}
-    </main>
+        <div className="flex flex-col">
+          <Button
+            onClick={() => setToggleForm(!toggleForm)}
+            color={toggleForm ? `failure` : undefined}
+            className={"ml-auto"}
+          >
+            {toggleForm ? "X" : "Add Credit Card"}
+          </Button>
+          {toggleForm ? <AddCreditCardForm /> : null}
+        </div>
+        {data !== undefined ? (
+          <CreditCardTable
+            data={data}
+            setShowModal={setShowModal}
+            setDeleteId={setDeleteId}
+          />
+        ) : null}
+      </main>
+    </>
   );
 };
 

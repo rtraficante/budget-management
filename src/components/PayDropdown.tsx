@@ -40,7 +40,7 @@ const PayDropdown = ({ amount, setAmount, id, disabled }: Props) => {
                 placeholder="Please enter an amount"
                 value={amount}
                 decimalsLimit={2}
-                onValueChange={(value, _) => setAmount(Number(value as string))}
+                onValueChange={(value = "0", _) => setAmount(value)}
                 prefix="$"
                 className="w-full rounded-lg border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900"
               />

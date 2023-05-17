@@ -1,4 +1,5 @@
 import { UserButton } from "@clerk/nextjs";
+import Link from "next/link";
 import React, { type SetStateAction, type Dispatch } from "react";
 
 type Props = {
@@ -45,16 +46,12 @@ const Header = ({ sidebarOpen, setSidebarOpen }: Props) => {
                 ></path>
               </svg>
             </button>
-            <a href="https://flowbite.com" className="ml-2 flex md:mr-24">
-              <img
-                src="https://flowbite.com/docs/images/logo.svg"
-                className="mr-3 h-8"
-                alt="FlowBite Logo"
-              />
+            <Link href="/" className="ml-2 flex md:mr-24">
+              <img src="/logo.png" className="mr-3 h-8" alt="DimeWise Logo" />
               <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white sm:text-2xl">
-                Flowbite
+                DimeWise
               </span>
-            </a>
+            </Link>
           </div>
           <div className="flex items-center">
             <UserButton />

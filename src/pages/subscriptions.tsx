@@ -1,5 +1,6 @@
 import { Button } from "flowbite-react";
 import { type NextPage } from "next";
+import Head from "next/head";
 import { type ChangeEvent, useState } from "react";
 import AddSubscriptionForm from "~/components/AddSubscriptionForm";
 import DeleteModal from "~/components/DeleteModal";
@@ -37,33 +38,40 @@ const Subscriptions: NextPage = () => {
   };
 
   return (
-    <main className="m-8 mx-auto mt-20 flex w-full max-w-[1000px] flex-col gap-4">
-      <DeleteModal
-        isLoading={isLoading}
-        setShowModal={setShowModal}
-        handleDelete={handleDelete}
-        showModal={showModal}
-        message="Are you sure you want to delete this subscription(s)?"
-      />
-      <div className="flex flex-col">
-        <Button
-          onClick={() => setToggleForm(!toggleForm)}
-          color={toggleForm ? `failure` : undefined}
-          className={"ml-auto"}
-        >
-          {toggleForm ? "X" : "Add Subscription"}
-        </Button>
-        {toggleForm ? <AddSubscriptionForm /> : null}
-      </div>
-      {data !== undefined ? (
-        <SubscriptionTable
-          data={data}
+    <>
+      <Head>
+        <title>DimeWise - Subscriptions</title>
+        <meta name="description" content="Manage your finaces with ease" />
+        <link rel="icon" href="/logo.png" />
+      </Head>
+      <main className="m-8 mx-auto mt-20 flex w-full max-w-[1000px] flex-col gap-4">
+        <DeleteModal
+          isLoading={isLoading}
           setShowModal={setShowModal}
-          handleCheckbox={handleCheckbox}
-          checkedIds={checkedIds}
+          handleDelete={handleDelete}
+          showModal={showModal}
+          message="Are you sure you want to delete this subscription(s)?"
         />
-      ) : null}
-    </main>
+        <div className="flex flex-col">
+          <Button
+            onClick={() => setToggleForm(!toggleForm)}
+            color={toggleForm ? `failure` : undefined}
+            className={"ml-auto"}
+          >
+            {toggleForm ? "X" : "Add Subscription"}
+          </Button>
+          {toggleForm ? <AddSubscriptionForm /> : null}
+        </div>
+        {data !== undefined ? (
+          <SubscriptionTable
+            data={data}
+            setShowModal={setShowModal}
+            handleCheckbox={handleCheckbox}
+            checkedIds={checkedIds}
+          />
+        ) : null}
+      </main>
+    </>
   );
 };
 

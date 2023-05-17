@@ -1,5 +1,6 @@
 import { Button } from "flowbite-react";
 import { type NextPage } from "next";
+import Head from "next/head";
 import { type ChangeEvent, useState } from "react";
 import DeleteModal from "~/components/DeleteModal";
 import TransactionForm from "~/components/TransactionForm";
@@ -37,33 +38,40 @@ const Transactions: NextPage = () => {
   };
 
   return (
-    <main className="m-8 mx-auto mt-20 flex w-full max-w-[1000px] flex-col gap-4">
-      <DeleteModal
-        setShowModal={setShowModal}
-        handleDelete={handleDelete}
-        showModal={showModal}
-        isLoading={isLoading}
-        message="Are you sure you want to delete this transaction(s)?"
-      />
-      <div className="flex flex-col">
-        <Button
-          onClick={() => setToggleForm(!toggleForm)}
-          color={toggleForm ? `failure` : undefined}
-          className={"ml-auto"}
-        >
-          {toggleForm ? "X" : "Add Transaction"}
-        </Button>
-        {toggleForm ? <TransactionForm /> : null}
-      </div>
-      {data !== undefined ? (
-        <TransactionTable
-          data={data}
+    <>
+      <Head>
+        <title>DimeWise - Transactions</title>
+        <meta name="description" content="Manage your finaces with ease" />
+        <link rel="icon" href="/logo.png" />
+      </Head>
+      <main className="m-8 mx-auto mt-20 flex w-full max-w-[1000px] flex-col gap-4">
+        <DeleteModal
           setShowModal={setShowModal}
-          handleCheckbox={handleCheckbox}
-          checkedIds={checkedIds}
+          handleDelete={handleDelete}
+          showModal={showModal}
+          isLoading={isLoading}
+          message="Are you sure you want to delete this transaction(s)?"
         />
-      ) : null}
-    </main>
+        <div className="flex flex-col">
+          <Button
+            onClick={() => setToggleForm(!toggleForm)}
+            color={toggleForm ? `failure` : undefined}
+            className={"ml-auto"}
+          >
+            {toggleForm ? "X" : "Add Transaction"}
+          </Button>
+          {toggleForm ? <TransactionForm /> : null}
+        </div>
+        {data !== undefined ? (
+          <TransactionTable
+            data={data}
+            setShowModal={setShowModal}
+            handleCheckbox={handleCheckbox}
+            checkedIds={checkedIds}
+          />
+        ) : null}
+      </main>
+    </>
   );
 };
 
