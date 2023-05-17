@@ -1,6 +1,5 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import { Bar } from "react-chartjs-2";
 import BarChart from "~/components/BarChart";
 import DashboardTopBars from "~/components/DashboardTopBars";
 import DoughnutChart from "~/components/DoughnutChart";

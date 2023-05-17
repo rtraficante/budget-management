@@ -28,7 +28,7 @@ type Props = {
 
 const BarChart = ({ amountsPerMonth }: Props) => {
   return (
-    <div className="relative col-span-2 flex h-[50vh] w-full rounded-lg border bg-white p-4 lg:h-[70vh]">
+    <div className="relative col-span-2  flex h-[50vh] w-full rounded-lg border bg-white p-4 lg:h-[70vh]">
       <Bar
         data={{
           labels: [
@@ -63,7 +63,7 @@ const BarChart = ({ amountsPerMonth }: Props) => {
             },
             title: {
               display: true,
-              text: "Monthly Spending",
+              text: "Yearly Expenses Per Month",
             },
           },
         }}
