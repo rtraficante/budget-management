@@ -14,7 +14,7 @@ const CreditCardTable = ({ data, setShowModal, setDeleteId }: Props) => {
   const [amount, setAmount] = useState(0);
 
   return (
-    <div className="relative overflow-x-auto">
+    <div className="relative flex-1 overflow-x-auto">
       <Table hoverable={true}>
         <Table.Head>
           <Table.HeadCell className="!p-4"></Table.HeadCell>

@@ -95,6 +95,7 @@ export const transactionRouter = createTRPCRouter({
         },
       },
     });
+
     const categoriesWithTransactions = categories.filter(
       (c) => c.transactions.length > 0
     );
@@ -114,23 +115,31 @@ export const transactionRouter = createTRPCRouter({
     const today = new Date();
 
     // This Month Stats
+    const beginningOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    beginningOfMonth.setUTCHours(0, 0, 0, 0);
     const thisMonthTransactions = await ctx.prisma.transaction.findMany({
       where: {
         userId: ctx.currentUserId,
         date: {
-          gte: new Date(`${today.getMonth() + 1}/01/${today.getFullYear()}`),
+          gte: new Date(today.getFullYear(), today.getMonth(), 1),
         },
       },
     });
 
-    let lastMonth = today.getMonth();
-    if (lastMonth === 0) lastMonth = 12;
+    let lastMonth = today.getMonth() - 1;
+    let year = today.getFullYear();
+    if (lastMonth === 0) {
+      lastMonth = 11;
+      year--;
+    }
 
+    const beginningOfLastMonth = new Date(year, lastMonth, 1);
+    beginningOfLastMonth.setUTCHours(0, 0, 0, 0);
     const lastMonthTransactions = await ctx.prisma.transaction.findMany({
       where: {
         userId: ctx.currentUserId,
         date: {
-          gte: new Date(`${lastMonth}/01/${today.getFullYear()}`),
+          gte: beginningOfLastMonth,
           lt: new Date(`${today.getMonth() + 1}/01/${today.getFullYear()}`),
         },
       },
@@ -191,14 +200,6 @@ export const transactionRouter = createTRPCRouter({
       result.reduce((total, { average }) => total + parseFloat(average), 0) /
       result.length;
 
-    console.log(
-      Math.ceil(
-        ((thisMonthSpendingTotal - lastMonthSpendingTotal) /
-          ((thisMonthSpendingTotal + lastMonthSpendingTotal) / 2)) *
-          100
-      )
-    );
-
     const thisMonthPercentage = getPercentage(
       thisMonthSpendingTotal,
       lastMonthSpendingTotal
@@ -216,7 +217,7 @@ export const transactionRouter = createTRPCRouter({
         total: thisMonthSpendingTotal,
         percentage: {
           num: `${isNaN(thisMonthPercentage) ? 0 : thisMonthPercentage}%`,
-          greaterThanPrevious: thisMonthSpendingTotal > lastMonthSpendingTotal,
+          greaterThanPrevious: thisMonthSpendingTotal >= lastMonthSpendingTotal,
         },
       },
       lastSevenSpending: {
@@ -224,7 +225,7 @@ export const transactionRouter = createTRPCRouter({
         percentage: {
           num: `${isNaN(lastSevenPercentage) ? 0 : lastSevenPercentage}%`,
           greaterThanPrevious:
-            lastSevenSpendingTotal > previousSevenSpendingTotal,
+            lastSevenSpendingTotal >= previousSevenSpendingTotal,
         },
       },
     };
@@ -252,10 +253,17 @@ export const transactionRouter = createTRPCRouter({
         SELECT
           DATE_TRUNC('month', (date_trunc('year', NOW()) + interval '1 month' * generate_series(0, 11))) as month
       ) months
-      LEFT JOIN "public"."Transaction" AS transaction ON DATE_TRUNC('month', transaction.date) = months.month
+      LEFT JOIN (
+        SELECT
+          DATE_TRUNC('month', date) as month,
+          amount
+        FROM
+          "public"."Transaction"
+        WHERE
+          "userId" = ${ctx.currentUserId}
+      ) transaction ON months.month = transaction.month
     WHERE
       DATE_PART('year', months.month) = ${currentYear}
-      AND "transaction"."userId" = ${ctx.currentUserId}
     GROUP BY
       months.month
     ORDER BY

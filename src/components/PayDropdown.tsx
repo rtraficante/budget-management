@@ -21,7 +21,13 @@ const PayDropdown = ({ amount, setAmount, id, disabled }: Props) => {
   });
 
   return (
-    <Dropdown label="Pay" dismissOnClick={false} disabled={disabled} size="sm">
+    <Dropdown
+      label="Pay"
+      dismissOnClick={false}
+      disabled={disabled}
+      size="sm"
+      placement="bottom"
+    >
       <Dropdown.Item className={`${disabled ? "hidden" : ""}`}>
         <form
           onSubmit={(e) => {

@@ -49,10 +49,12 @@ const TransactionForm = () => {
       className=" flex flex-col gap-4"
       onSubmit={(e) => {
         e.preventDefault();
+        const transactionDate = new Date(formData.date);
+        transactionDate.setUTCHours(12, 0, 0, 0);
         mutate({
           ...formData,
           amount: Number(formData.amount),
-          date: new Date(formData.date),
+          date: transactionDate,
         });
       }}
     >

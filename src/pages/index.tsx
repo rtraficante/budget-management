@@ -33,10 +33,21 @@ const Home: NextPage = () => {
           isLoading={statsLoading}
         />
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-          <DoughnutChart
-            categoryNames={categoryNames}
-            totalAmounts={totalAmounts}
-          />
+          {totalAmounts.length < 1 ? (
+            <div className="relative col-span-2 flex  h-[50vh] w-full flex-col rounded-lg border bg-white p-4  lg:h-[70vh]">
+              <h2 className="text-center text-sm font-bold text-gray-600">
+                Yearly Expenses Per Category
+              </h2>
+              <p className="mt-8  w-full rounded-lg bg-gray-50 p-4 text-center">
+                There is no recent transaction history.
+              </p>
+            </div>
+          ) : (
+            <DoughnutChart
+              categoryNames={categoryNames}
+              totalAmounts={totalAmounts}
+            />
+          )}
           {recentTransactions && (
             <RecentTransactions
               transactions={recentTransactions}

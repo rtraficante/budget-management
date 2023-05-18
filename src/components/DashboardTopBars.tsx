@@ -59,8 +59,8 @@ const DashboardTopBars = ({
             <p
               className={` flex items-center justify-center rounded-lg p-2 ${
                 thisMonthSpending?.percentage.greaterThanPrevious
-                  ? "bg-green-200 text-green-700"
-                  : "bg-red-200 text-red-700"
+                  ? "bg-red-200 text-red-700"
+                  : "bg-green-200 text-green-700"
               }`}
             >
               <span className="text-lg ">
@@ -83,16 +83,16 @@ const DashboardTopBars = ({
               <p className="text-2xl font-bold ">
                 ${lastSevenSpending?.total.toFixed(2)}
               </p>
-              <p className="text-gray-600">This Week&apos;s Spending</p>
+              <p className="text-gray-600">Last Seven Days Spending</p>
             </div>
             <p
               className={` flex items-center justify-center rounded-lg p-2 ${
                 lastSevenSpending?.percentage.greaterThanPrevious
-                  ? "bg-green-200 text-green-700"
-                  : "bg-red-200 text-red-700"
+                  ? "bg-red-200 text-red-700"
+                  : "bg-green-200 text-green-700"
               }`}
             >
-              <span className="text-lg text-green-700">
+              <span className="text-lg">
                 {lastSevenSpending?.percentage.greaterThanPrevious ? "+" : null}
                 {lastSevenSpending?.percentage.num}
               </span>

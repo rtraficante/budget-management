@@ -35,7 +35,7 @@ const CreditCards: NextPage = () => {
         <meta name="description" content="Manage your finaces with ease" />
         <link rel="icon" href="/logo.png" />
       </Head>
-      <main className="m-8 mx-auto mt-20 flex w-full max-w-[1000px] flex-col gap-4">
+      <main className="m-8 mx-auto mt-20 flex h-[80vh] w-full max-w-[1000px] flex-col gap-4">
         <DeleteModal
           setShowModal={setShowModal}
           handleDelete={handleDelete}
