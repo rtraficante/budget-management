@@ -24,6 +24,13 @@ const CreditCardTable = ({ data, setShowModal, setDeleteId }: Props) => {
           <Table.HeadCell>Status</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
+          {data?.length < 1 ? (
+            <Table.Row>
+              <Table.Cell colSpan={5} className="text-center">
+                There is no data to display.
+              </Table.Cell>
+            </Table.Row>
+          ) : null}
           {data?.map((cc) => (
             <Table.Row
               key={cc.id}

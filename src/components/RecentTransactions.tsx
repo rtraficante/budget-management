@@ -3,7 +3,7 @@ import { Button, Spinner } from "flowbite-react";
 import React from "react";
 
 type Props = {
-  transactions?: (Transaction & { category: Category | null })[];
+  transactions: (Transaction & { category: Category | null })[];
   isLoading: boolean;
 };
 
@@ -16,6 +16,10 @@ const RecentTransactions = ({ transactions, isLoading }: Props) => {
           <span className="pr-3">Loading...</span>
           <Spinner />
         </div>
+      ) : transactions.length < 1 ? (
+        <p className="mt-8 w-full rounded-lg bg-gray-50 p-4 text-center">
+          There is no recent transaction history.
+        </p>
       ) : (
         <>
           <ul className="w-full">

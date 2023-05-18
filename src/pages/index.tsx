@@ -18,8 +18,6 @@ const Home: NextPage = () => {
   const categoryNames = total ? total.map((t) => t.name) : [];
   const totalAmounts = total ? total.map((t) => t.total) : [];
 
-  console.log(spendingStats);
-
   return (
     <>
       <Head>
@@ -39,10 +37,12 @@ const Home: NextPage = () => {
             categoryNames={categoryNames}
             totalAmounts={totalAmounts}
           />
-          <RecentTransactions
-            transactions={recentTransactions}
-            isLoading={transactionsLoading}
-          />
+          {recentTransactions && (
+            <RecentTransactions
+              transactions={recentTransactions}
+              isLoading={transactionsLoading}
+            />
+          )}
         </div>
 
         <BarChart amountsPerMonth={transactionsByMonth} />

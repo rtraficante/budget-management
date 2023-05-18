@@ -60,6 +60,16 @@ const DataTable = <T extends MinTableItem>({
           ) : null}
         </Table.Head>
         <Table.Body className="divide-y">
+          {data.length < 1 ? (
+            <Table.Row>
+              <Table.Cell
+                colSpan={objectValues(headers).length + 1}
+                className="text-center"
+              >
+                There is no data to display.
+              </Table.Cell>
+            </Table.Row>
+          ) : null}
           {data.map((item) => (
             <Table.Row
               key={item.id}
@@ -68,16 +78,14 @@ const DataTable = <T extends MinTableItem>({
               <Table.Cell className="!p-4">
                 <Checkbox value={item.id} onChange={handleCheckbox} />
               </Table.Cell>
-              {objectValues(item).map((entry, i) => {
-                return (
-                  <Table.Cell key={i} className="text-gray-900">
-                    {/* TODO: Figure out this error */}
-                    {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                    {/* @ts-ignore */}
-                    {entry}
-                  </Table.Cell>
-                );
-              })}
+              {objectValues(item).map((entry, i) => (
+                <Table.Cell key={i} className="text-gray-900">
+                  {/* TODO: Figure out this error */}
+                  {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                  {/* @ts-ignore */}
+                  {entry}
+                </Table.Cell>
+              ))}
               {editable ? (
                 <Table.Cell>
                   <a
