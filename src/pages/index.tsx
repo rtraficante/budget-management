@@ -18,6 +18,8 @@ const Home: NextPage = () => {
   const categoryNames = total ? total.map((t) => t.name) : [];
   const totalAmounts = total ? total.map((t) => t.total) : [];
 
+  console.log(spendingStats);
+
   return (
     <>
       <Head>

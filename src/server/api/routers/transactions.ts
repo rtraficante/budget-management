@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { createTRPCRouter, privateProcedure } from "~/server/api/trpc";
 import { type FormattedTransactionWithCategory } from "~/types";
+import { getPercentage } from "~/utils/helpers";
 
 type TotalsByCategory = {
   name: string;
@@ -183,34 +184,45 @@ export const transactionRouter = createTRPCRouter({
     const result = await ctx.prisma.$queryRaw<
       { month: string; average: string }[]
     >(
-      Prisma.sql`SELECT DATE_TRUNC('month', date) as month, SUM(amount::numeric) as average FROM "public"."Transaction" GROUP BY month`
+      Prisma.sql`SELECT DATE_TRUNC('month', date) as month, SUM(amount::numeric) as average FROM "public"."Transaction" AS transaction WHERE "transaction"."userId" = ${ctx.currentUserId} GROUP BY month`
     );
 
     const averageMonthlySpending =
       result.reduce((total, { average }) => total + parseFloat(average), 0) /
       result.length;
 
+    console.log(
+      Math.ceil(
+        ((thisMonthSpendingTotal - lastMonthSpendingTotal) /
+          ((thisMonthSpendingTotal + lastMonthSpendingTotal) / 2)) *
+          100
+      )
+    );
+
+    const thisMonthPercentage = getPercentage(
+      thisMonthSpendingTotal,
+      lastMonthSpendingTotal
+    );
+    const lastSevenPercentage = getPercentage(
+      lastSevenSpendingTotal,
+      previousSevenSpendingTotal
+    );
+
     return {
-      averageMonthlySpending: averageMonthlySpending,
+      averageMonthlySpending: isNaN(averageMonthlySpending)
+        ? 0
+        : averageMonthlySpending,
       thisMonthSpending: {
         total: thisMonthSpendingTotal,
         percentage: {
-          num: `${Math.ceil(
-            ((thisMonthSpendingTotal - lastMonthSpendingTotal) /
-              ((thisMonthSpendingTotal + lastMonthSpendingTotal) / 2)) *
-              100
-          )}%`,
+          num: `${isNaN(thisMonthPercentage) ? 0 : thisMonthPercentage}%`,
           greaterThanPrevious: thisMonthSpendingTotal > lastMonthSpendingTotal,
         },
       },
       lastSevenSpending: {
         total: lastSevenSpendingTotal,
         percentage: {
-          num: `${Math.ceil(
-            ((lastSevenSpendingTotal - previousSevenSpendingTotal) /
-              ((lastSevenSpendingTotal + previousSevenSpendingTotal) / 2)) *
-              100
-          )}%`,
+          num: `${isNaN(lastSevenPercentage) ? 0 : lastSevenPercentage}%`,
           greaterThanPrevious:
             lastSevenSpendingTotal > previousSevenSpendingTotal,
         },
@@ -243,13 +255,12 @@ export const transactionRouter = createTRPCRouter({
       LEFT JOIN "public"."Transaction" AS transaction ON DATE_TRUNC('month', transaction.date) = months.month
     WHERE
       DATE_PART('year', months.month) = ${currentYear}
+      AND "transaction"."userId" = ${ctx.currentUserId}
     GROUP BY
       months.month
     ORDER BY
       months.month
   `;
-
-    console.log(result);
 
     return result.map((s) => s.sum);
   }),

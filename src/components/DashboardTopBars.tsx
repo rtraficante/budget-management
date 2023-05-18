@@ -35,7 +35,7 @@ const DashboardTopBars = ({
         ) : (
           <div className="flex w-full flex-col pb-4 ">
             <p className="text-2xl font-bold ">
-              ${averageMontlySpending ? averageMontlySpending.toFixed(2) : "0"}
+              ${averageMontlySpending?.toFixed(2)}
             </p>
             <p className="text-gray-600">Average Monthly Spending</p>
           </div>
@@ -52,7 +52,7 @@ const DashboardTopBars = ({
           <>
             <div className="flex w-full flex-col pb-4 ">
               <p className="text-2xl font-bold ">
-                ${thisMonthSpending ? thisMonthSpending.total.toFixed(2) : "0"}
+                ${thisMonthSpending?.total.toFixed(2)}
               </p>
               <p className="text-gray-600">This Month&apos;s Spending</p>
             </div>
@@ -65,7 +65,7 @@ const DashboardTopBars = ({
             >
               <span className="text-lg ">
                 {thisMonthSpending?.percentage.greaterThanPrevious ? "+" : null}
-                {thisMonthSpending ? thisMonthSpending.percentage.num : null}
+                {thisMonthSpending?.percentage.num}
               </span>
             </p>
           </>
@@ -81,7 +81,7 @@ const DashboardTopBars = ({
           <>
             <div className="flex w-full flex-col pb-4 ">
               <p className="text-2xl font-bold ">
-                ${lastSevenSpending ? lastSevenSpending.total.toFixed(2) : "0"}
+                ${lastSevenSpending?.total.toFixed(2)}
               </p>
               <p className="text-gray-600">This Week&apos;s Spending</p>
             </div>
@@ -94,7 +94,7 @@ const DashboardTopBars = ({
             >
               <span className="text-lg text-green-700">
                 {lastSevenSpending?.percentage.greaterThanPrevious ? "+" : null}
-                {lastSevenSpending ? lastSevenSpending.percentage.num : null}
+                {lastSevenSpending?.percentage.num}
               </span>
             </p>
           </>
