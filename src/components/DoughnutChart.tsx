@@ -11,7 +11,7 @@ type Props = {
 
 const DoughnutChart = ({ categoryNames, totalAmounts }: Props) => {
   return (
-    <div className="relative col-span-2 flex h-[50vh] w-full rounded-lg border bg-white p-4  lg:h-[70vh]">
+    <div className="relative col-span-2 flex h-[80vh] w-full rounded-lg border bg-white p-4  lg:h-[70vh]">
       <Doughnut
         options={{
           responsive: true,
