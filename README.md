@@ -1,28 +1,22 @@
-# Create T3 App
+# Project Management System
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+This application was created to allow users (mostly myself) to track and improve their personal finances.
 
-## What's next? How do I make an app with this?
+## Demo Login
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+Email: demo@demo.com
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+Password: DemoTest!!
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+### Link To Project: https://www.dimewise.com/
 
-## Learn More
+![Project Screenshot](https://rt-media.s3.amazonaws.com/project-screenshots/proj-man-2.png)
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+## Tech Used: ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)![REACT BADGE](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)![POSTGRESQL BADGE](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)![Chart.js](https://img.shields.io/badge/chart.js-F5788D.svg?style=for-the-badge&logo=chart.js&logoColor=white)![TAILWIND BADGE](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+## Optimizations
+When creating this project, I decided to use a serveless database technology called Railway (https://railway.app/). The benefit of this service is it's ease of use and setup, but the problem is it's cold start times. I find that when opening the application for the first time in a while, it will take a good amount of time to load all of the information needed from the database. To fix this issue, I'd probably use my recent studies of AWS and use their RDS service, along with an EC2 instance, to create a low-latency environment for myself and the users of this application.
 
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+## Lessons Learned
+Throughout my time as a developer, when dealing with querying from databases, I've mostly relied on the ORM I was using at the time (this time around it was Prisma). When dealing with a lot of the dashboard analytics, I had to use a lot of custom SQL queries that I was very uncomfortable with and needed assistance to create. This made me realize how important the knowledge of SQL querying actually is and how my neglect of raw SQL has hindered my growth as a full-stack engineer. Going forward I will spend more time studying and practicing this skill, so I can be more useful and knowledgable in regards to SQL.
