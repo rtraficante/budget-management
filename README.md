@@ -8,7 +8,7 @@ Email: demo@demo.com
 
 Password: DemoTest!!
 
-### Link To Project: https://www.dimewise.com/
+### Link To Project: https://www.dimewise.dev/
 
 ![Project Screenshot](https://rt-media.s3.amazonaws.com/project-screenshots/dimewise.png)
 
