@@ -10,7 +10,7 @@ Password: DemoTest!!
 
 ### Link To Project: https://www.dimewise.com/
 
-![Project Screenshot] (https://rt-media.s3.amazonaws.com/project-screenshots/dimewise.png)
+![Project Screenshot](https://rt-media.s3.amazonaws.com/project-screenshots/dimewise.png)
 
 
 ## Tech Used: ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)![REACT BADGE](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)![POSTGRESQL BADGE](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)![Chart.js](https://img.shields.io/badge/chart.js-F5788D.svg?style=for-the-badge&logo=chart.js&logoColor=white)![TAILWIND BADGE](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
