@@ -1,6 +1,6 @@
 # DimeWise (Budget/Finance Management)
 
-This application was created to allow users (mostly myself) to track and improve their personal finances.
+This application was created to allow users to track and improve their personal finances.
 
 ## Demo Login
 
