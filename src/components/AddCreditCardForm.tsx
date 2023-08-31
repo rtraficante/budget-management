@@ -85,7 +85,7 @@ const AddCreditCardForm = () => {
         </div>
       </div>
 
-      <Button type="submit">Submit</Button>
+      <Button type="submit" className="bg-blue-700 enabled:hover:bg-blue-800">Submit</Button>
     </form>
   );
 };

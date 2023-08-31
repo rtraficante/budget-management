@@ -70,7 +70,11 @@ const Transactions: NextPage = () => {
           <Button
             onClick={() => setToggleForm(!toggleForm)}
             color={toggleForm ? `failure` : undefined}
-            className={"ml-auto"}
+            className={
+              !toggleForm
+                ? "ml-auto bg-blue-700 enabled:hover:bg-blue-800"
+                : "ml-auto"
+            }
           >
             {toggleForm ? "X" : "Add Transaction"}
           </Button>
@@ -86,10 +90,18 @@ const Transactions: NextPage = () => {
         ) : null}
         {data?.count && data.count > PAGE_SIZE && (
           <Pagination
-            className="mx-auto"
+            className="mx-auto "
             currentPage={currentPage}
             onPageChange={(page) => {
               handleNextPage(page);
+            }}
+            theme={{
+              pages: {
+                selector: {
+                  active:
+                    "bg-blue-50 text-blue-600 hover:bg-cyan-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white",
+                },
+              },
             }}
             showIcons
             totalPages={Math.ceil(data.count / PAGE_SIZE)}

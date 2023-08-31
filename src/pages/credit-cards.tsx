@@ -47,7 +47,11 @@ const CreditCards: NextPage = () => {
           <Button
             onClick={() => setToggleForm(!toggleForm)}
             color={toggleForm ? `failure` : undefined}
-            className={"ml-auto"}
+            className={
+              !toggleForm
+                ? "ml-auto bg-blue-700 enabled:hover:bg-blue-800"
+                : "ml-auto"
+            }
           >
             {toggleForm ? "X" : "Add Credit Card"}
           </Button>

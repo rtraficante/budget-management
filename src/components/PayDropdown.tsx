@@ -2,6 +2,7 @@ import { Button, Dropdown, Label } from "flowbite-react";
 import React, { type Dispatch, type SetStateAction } from "react";
 import CurrencyInput from "react-currency-input-field";
 import { api } from "~/utils/api";
+import { FiChevronDown } from "react-icons/fi";
 
 type Props = {
   amount: number;
@@ -27,6 +28,12 @@ const PayDropdown = ({ amount, setAmount, id, disabled }: Props) => {
       disabled={disabled}
       size="sm"
       placement="bottom"
+      renderTrigger={() => (
+        <Button className=" bg-blue-700 enabled:hover:bg-blue-800">
+          <h2>Pay</h2>
+          <FiChevronDown className="my-auto ml-1" />
+        </Button>
+      )}
     >
       <Dropdown.Item className={`${disabled ? "hidden" : ""}`}>
         <form
@@ -52,7 +59,10 @@ const PayDropdown = ({ amount, setAmount, id, disabled }: Props) => {
               />
             </div>
           </div>
-          <Button type="submit" className="w-full">
+          <Button
+            type="submit"
+            className="w-full bg-blue-700 enabled:hover:bg-blue-800"
+          >
             Submit
           </Button>
         </form>

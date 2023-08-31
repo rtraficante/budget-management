@@ -133,7 +133,7 @@ const TransactionForm = () => {
           />
         </div>
       </div>
-      <Button type="submit">
+      <Button type="submit" className="bg-blue-700 enabled:hover:bg-blue-800">
         {isLoading ? (
           <>
             <Spinner />
