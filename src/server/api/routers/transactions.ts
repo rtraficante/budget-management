@@ -11,30 +11,50 @@ type TotalsByCategory = {
 };
 
 export const transactionRouter = createTRPCRouter({
-  getAll: privateProcedure.query(async ({ ctx }) => {
-    const transactions = await ctx.prisma.transaction.findMany({
-      where: {
-        userId: ctx.currentUserId,
-      },
-      include: {
-        category: true,
-      },
-      orderBy: [{ date: "desc" }],
-    });
-
-    const formattedTransactions: FormattedTransactionWithCategory[] =
-      transactions.map((val) => {
-        return {
-          id: val.id,
-          date: val.date.toLocaleDateString("en-US", { timeZone: "UTC" }),
-          amount: new Prisma.Decimal(val.amount).toNumber().toFixed(2),
-          description: val.description,
-          category: val.category?.name,
-        };
+  getAll: privateProcedure
+    .input(
+      z.object({
+        page: z.number().nullish(),
+        size: z.number().nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const page = input.page ?? 1;
+      const size = input.size ?? 25;
+      const transactions = await ctx.prisma.transaction.findMany({
+        take: size,
+        skip: (page - 1) * size,
+        where: {
+          userId: ctx.currentUserId,
+        },
+        include: {
+          category: true,
+        },
+        orderBy: [{ date: "desc" }],
       });
 
-    return formattedTransactions;
-  }),
+      const formattedTransactions: FormattedTransactionWithCategory[] =
+        transactions.map((val) => {
+          return {
+            id: val.id,
+            date: val.date.toLocaleDateString("en-US", { timeZone: "UTC" }),
+            amount: new Prisma.Decimal(val.amount).toNumber().toFixed(2),
+            description: val.description,
+            category: val.category?.name,
+          };
+        });
+
+      const count = await ctx.prisma.transaction.count({
+        where: {
+          userId: ctx.currentUserId,
+        },
+      });
+
+      return {
+        transactions: formattedTransactions,
+        count,
+      };
+    }),
   add: privateProcedure
     .input(
       z.object({

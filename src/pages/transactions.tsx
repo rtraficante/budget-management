@@ -1,4 +1,4 @@
-import { Button } from "flowbite-react";
+import { Button, Pagination } from "flowbite-react";
 import { type NextPage } from "next";
 import Head from "next/head";
 import { type ChangeEvent, useState } from "react";
@@ -7,8 +7,14 @@ import TransactionForm from "~/components/TransactionForm";
 import TransactionTable from "~/components/TransactionTable";
 import { api } from "~/utils/api";
 
+const PAGE_SIZE = 25;
+
 const Transactions: NextPage = () => {
-  const { data } = api.transaction.getAll.useQuery();
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data } = api.transaction.getAll.useQuery({
+    page: currentPage,
+    size: PAGE_SIZE,
+  });
   const [toggleForm, setToggleForm] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [checkedIds, setCheckedIds] = useState<number[]>([]);
@@ -35,6 +41,14 @@ const Transactions: NextPage = () => {
 
   const handleDelete = () => {
     mutate({ ids: checkedIds });
+  };
+
+  const handleNextPage = (page: number) => {
+    if (!data?.count) return;
+
+    const totalPages = data?.count / PAGE_SIZE;
+    if (currentPage == totalPages) return;
+    setCurrentPage(page);
   };
 
   return (
@@ -64,12 +78,23 @@ const Transactions: NextPage = () => {
         </div>
         {data !== undefined ? (
           <TransactionTable
-            data={data}
+            data={data.transactions}
             setShowModal={setShowModal}
             handleCheckbox={handleCheckbox}
             checkedIds={checkedIds}
           />
         ) : null}
+        {data?.count && data.count > PAGE_SIZE && (
+          <Pagination
+            className="mx-auto"
+            currentPage={currentPage}
+            onPageChange={(page) => {
+              handleNextPage(page);
+            }}
+            showIcons
+            totalPages={Math.ceil(data.count / PAGE_SIZE)}
+          />
+        )}
       </main>
     </>
   );
