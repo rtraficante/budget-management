@@ -1,5 +1,5 @@
-import { Button, Dropdown, Label } from "flowbite-react";
-import React, { type Dispatch, type SetStateAction } from "react";
+import { Button, Label, Spinner } from "flowbite-react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import CurrencyInput from "react-currency-input-field";
 import { api } from "~/utils/api";
 import { FiChevronDown } from "react-icons/fi";
@@ -14,7 +14,9 @@ type Props = {
 const PayDropdown = ({ amount, setAmount, id, disabled }: Props) => {
   const ctx = api.useContext();
 
-  const { mutate } = api.creditCard.pay.useMutation({
+  const [open, setOpen] = useState<boolean>(false);
+
+  const { mutate, isLoading } = api.creditCard.pay.useMutation({
     onSuccess: () => {
       setAmount(0);
       void ctx.creditCard.getAll.invalidate();
@@ -22,52 +24,61 @@ const PayDropdown = ({ amount, setAmount, id, disabled }: Props) => {
   });
 
   return (
-    <Dropdown
-      label="Pay"
-      dismissOnClick={false}
-      disabled={disabled}
-      size="sm"
-      placement="bottom"
-      renderTrigger={() => (
-        <Button className=" bg-blue-700 enabled:hover:bg-blue-800">
-          <h2>Pay</h2>
-          <FiChevronDown className="my-auto ml-1" />
-        </Button>
-      )}
-    >
-      <Dropdown.Item className={`${disabled ? "hidden" : ""}`}>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            mutate({ id, amount: Number(amount) });
-          }}
+    <div className="relative inline-block">
+      <Button
+        disabled={disabled}
+        className="ml-auto bg-blue-700 enabled:hover:bg-blue-800"
+        onClick={() => setOpen(!open)}
+      >
+        <h2>Pay</h2>
+        <FiChevronDown className="my-auto ml-1" />
+      </Button>
+      {open && (
+        <li
+          className={`${
+            disabled ? "hidden" : ""
+          } absolute right-0 top-[100%] z-50 mt-2 w-[200px] list-none rounded-lg bg-white p-4 shadow-md`}
         >
-          <div>
-            <div className="mb-2">
-              <div className="mb-2 block">
-                <Label htmlFor="amount" value="Payment Amount" />
-              </div>
-              <CurrencyInput
-                id="amount"
-                name="amount"
-                placeholder="Please enter an amount"
-                value={amount}
-                decimalsLimit={2}
-                onValueChange={(value, _) => setAmount(Number(value))}
-                prefix="$"
-                className="w-full rounded-lg border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900"
-              />
-            </div>
-          </div>
-          <Button
-            type="submit"
-            className="w-full bg-blue-700 enabled:hover:bg-blue-800"
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              mutate({ id, amount: Number(amount) });
+            }}
           >
-            Submit
-          </Button>
-        </form>
-      </Dropdown.Item>
-    </Dropdown>
+            <div>
+              <div className="mb-2">
+                <div className="mb-2 block">
+                  <Label htmlFor="amount" value="Payment Amount" />
+                </div>
+                <CurrencyInput
+                  id="amount"
+                  name="amount"
+                  placeholder="Please enter an amount"
+                  value={amount}
+                  decimalsLimit={2}
+                  onValueChange={(value, _) => setAmount(Number(value))}
+                  prefix="$"
+                  className="w-full rounded-lg border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900"
+                />
+              </div>
+            </div>
+            <Button
+              type="submit"
+              className="w-full bg-blue-700 enabled:hover:bg-blue-800"
+            >
+              {isLoading ? (
+                <>
+                  <Spinner />
+                  <span className="pl-3">Loading...</span>
+                </>
+              ) : (
+                "Submit"
+              )}
+            </Button>
+          </form>
+        </li>
+      )}
+    </div>
   );
 };
 
